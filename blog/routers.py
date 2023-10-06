@@ -1,26 +1,41 @@
-from fastapi import APIRouter, Depends
+import shutil
 
-from .import crud
+from fastapi import APIRouter, Depends, UploadFile, File
+
+from . import crud
 from .schemas import PostBase
 from sqlalchemy.orm import Session
 from database.database import get_db
+import string
+import random
 
-router = APIRouter(
-  prefix='/post',
-  tags=['post']
-)
+router = APIRouter(prefix="/post", tags=["post"])
 
 
-@router.post('')
+@router.post("")
 def create(request: PostBase, db: Session = Depends(get_db)):
     return crud.create(db, request)
 
 
-@router.get('/all')
+@router.get("/all")
 def posts(db: Session = Depends(get_db)):
     return crud.get_all(db)
 
 
-@router.delete('/{id}')
+@router.delete("/{id}")
 def delete(id: int, db: Session = Depends(get_db)):
     return crud.delete(id, db)
+
+
+@router.post("/image")
+def upload_image(image: UploadFile = File(...)):
+    letter = string.ascii_letters
+    rand_str = "".join(random.choice(letter) for i in range(6))
+    new = f"_{rand_str}."
+    filename = new.join(image.filename.rsplit(".", 1))
+    path = f"images/{filename}"
+
+    with open(path, "w+b") as buffer:
+        shutil.copyfileobj(image.file, buffer)
+
+    return {"filename": path}
