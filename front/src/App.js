@@ -2,6 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import React, {useEffect, useState} from "react";
 import Post from './Post';
+import NewPost from './NewPost';
+
 
 const BASE_URL = "http://localhost:8000/"
 
@@ -33,13 +35,17 @@ function App() {
 
   return (
     <div className="App">
-      <div className="blog_title">Open City Blog</div>
-        <div className="app_posts"></div>
+      <div className='blog_title'>Open City Blog</div>
+      <div className='app_posts'>
         {
-            posts.map(post => (
-                <Post post={post} />
-            ))
+          posts.map(post => (
+            <Post post={post} />
+          ))
         }
+      </div>
+      <div className='new_post'>
+        <NewPost />
+      </div>
     </div>
   );
 }
