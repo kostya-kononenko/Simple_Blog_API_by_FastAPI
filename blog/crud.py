@@ -27,7 +27,8 @@ def delete(id: int, db: Session):
     post = db.query(DbPost).filter(DbPost.id == id).first()
     if not post:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id {id} not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Post with id {id} not found"
         )
     db.delete(post)
     db.commit()
